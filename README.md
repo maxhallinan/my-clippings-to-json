@@ -1,6 +1,6 @@
 # my-clippings-to-json
 
-Format a Kindle 'My Clippings.txt' as JSON.
+Format Kindle clippings ('Kindle/documents/My Clippings.txt') as JSON. 
 
 ## Installation
 
@@ -13,5 +13,25 @@ pipsi install .
 ## Usage
 
 ```
-my-clippings-to-json --help
+my_clippings_to_json [OPTIONS] INPUT OUTPUT
 ```
+
+### Arguments
+
+#### `INPUT`
+
+path to input file
+
+#### `OUTPUT`
+
+path to output file
+
+### Options
+
+#### `-h, --help`
+
+show help page
+
+#### `-s, --start INTEGER`
+
+start at line number of input file (default: 1)
