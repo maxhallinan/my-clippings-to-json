@@ -2,38 +2,47 @@ import re
 
 author_rules = {
     'line': 0,
-    'match': '',
+    'match_pattern': '\(([^)]+)\)',
+    'match_group': -1,
     'value_type': 'string',
+    'delimiter': ';',
 }
 body_rules = {
     'line': 2,
-    'match': '',
+    'match_pattern': '/./',
+    'match_group': -1,
     'value_type': 'string',
 }
 datetime_rules = {
     'line': 1,
-    'match': '',
+    'match_pattern': '(?<=Added on )(.*)',
+    'match_group': -1,
     'value_type': 'date',
 }
 line_range_rules = {
-    'line': 0,
-    'match': '',
+    'line': 1,
+    'match_pattern': '(?<=Location )(.*)(?= \|)',
+    'match_group': -1,
     'value_type': 'number',
     'delimiter': '-'
 }
 page_rules = {
     'line': 1,
-    'match': '',
+    'match_pattern': '(?<=page\s)(\w+)',
+    'match_group': -1,
     'value_type': 'number',
 }
 subtype_rules = {
     'line': 1,
+    'match_pattern': '(?<=Your\s)(\w+)',
+    'match_group': -1,
     'value_type': 'string',
     'to_lower': True
 }
 title_rules = {
     'line': 0,
-    'match': '',
+    'match_pattern': '(^.*)(?=\s\()',
+    'match_group': -1,
     'value_type': 'string',
 }
 
@@ -57,7 +66,7 @@ class Clipping(object):
 
     @staticmethod
     def is_end(line):
-        return line == Clipping.delimiter 
+        return line == Clipping.delimiter
 
     def is_subtype(self, lines):
         sl_ind = self.parsing_rules['subtype']['line']
@@ -79,7 +88,18 @@ class Clipping(object):
         return line
 
     def parse_line(self, rules, line):
-        return line
+        data = line
+
+        if 'match_pattern' in rules:
+            pattern = rules['match_pattern']
+            m = re.compile(pattern).findall(data)
+            if m:
+                group = rules['match_group']
+                data = m[group]
+            if 'delimiter' in rules:
+                data = data.split(rules['delimiter'])
+
+        return data
 
     def get_line(self, rules, lines):
         line_ind = rules['line']
@@ -89,7 +109,7 @@ class Clipping(object):
             line = lines[line_ind]
 
         return line
-        
+
     def parse(self, lines):
         parsed = {}
 
