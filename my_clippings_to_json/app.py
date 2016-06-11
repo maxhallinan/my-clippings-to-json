@@ -31,11 +31,11 @@ def parse_clipping(clipping):
     clipping = list(filter(None, clipping))
     parsed = {}
 
-    if highlight.is_type(clipping):
+    if highlight.is_subtype(clipping):
         parsed = highlight.parse(clipping)
-    elif note.is_type(clipping):
+    elif note.is_subtype(clipping):
         parsed = note.parse(clipping)
-    elif bookmark.is_type(clipping):
+    elif bookmark.is_subtype(clipping):
         parsed = bookmark.parse(clipping)
 
     return parsed

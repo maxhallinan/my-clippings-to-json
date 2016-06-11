@@ -22,3 +22,4 @@ def main(input_path, output_path, start):
         input_path, 
         output_path, 
         start_line=start)
+main()
