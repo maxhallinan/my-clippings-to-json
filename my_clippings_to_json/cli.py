@@ -1,5 +1,6 @@
-import click
 import app
+import click
+import sys
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -22,6 +23,8 @@ def main(input_path, output_path, start):
         input_path, 
         output_path, 
         start_line=start)
+
+    sys.stdout.write(str(last_line_number) + '\n')
 
 if __name__ == '__main__':
     main()

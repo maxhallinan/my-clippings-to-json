@@ -35,19 +35,8 @@ def to_value_type(value_type, value):
 
     return value
 
-def parse_line(rules, line):
-    data = None
-    pattern = rules['match pattern']
+def format_data(rules, data):
     value_type = rules['value type']
-
-    m = re.compile(pattern).findall(line)
-
-    if m:
-        group = int(rules['match group'])
-        data = m[group]
-
-    if not data:
-        return None
 
     if 'delimiter' in rules:
         data = data.split(rules['delimiter'])
@@ -55,6 +44,21 @@ def parse_line(rules, line):
             data[i] = to_value_type(value_type, data[i])
     else:
         data = to_value_type(value_type, data)
+
+    return data
+
+def parse_line(rules, line):
+    data = None
+    pattern = rules['match pattern']
+
+    match_groups = re.compile(pattern).findall(line)
+
+    if match_groups:
+        group = int(rules['match group'])
+        data = match_groups[group]
+
+    if data:
+        data = format_data(rules, data)
 
     return data
 
