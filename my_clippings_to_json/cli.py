@@ -1,4 +1,4 @@
-import app
+from . import app
 import click
 import sys
 

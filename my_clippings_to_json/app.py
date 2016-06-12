@@ -1,4 +1,4 @@
-import clipping
+from . import clipping
 from codecs import BOM_UTF8
 import json
 
