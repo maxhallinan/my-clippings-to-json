@@ -1,6 +1,6 @@
 # my-clippings-to-json
 
-Format Kindle clippings ('Kindle/documents/My Clippings.txt') as JSON. 
+Format 'Kindle/documents/My Clippings.txt' as JSON. 
 
 ## Installation
 

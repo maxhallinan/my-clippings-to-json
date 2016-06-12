@@ -1,76 +1,27 @@
+import configparser
 from datetime import datetime
 import re
 import time
 
-author_rules = {
-    'line': 0,
-    'match_pattern': '\(([^)]+)\)',
-    'match_group': -1,
-    'value_type': 'string',
-    'delimiter': ';',
-}
-body_rules = {
-    'line': 2,
-    'match_pattern': '(.*)',
-    'match_group': 0,
-    'value_type': 'string',
-}
-created_at_rules = {
-    'line': 1,
-    'match_pattern': '(?<=Added on )(.*)',
-    'match_group': -1,
-    'value_type': 'date',
-}
-line_range_rules = {
-    'line': 1,
-    'match_pattern': '(?<=Location )(.*)(?= \|)',
-    'match_group': -1,
-    'value_type': 'number',
-    'delimiter': '-'
-}
-page_rules = {
-    'line': 1,
-    'match_pattern': '(?<=page\s)(\w+)',
-    'match_group': -1,
-    'value_type': 'number',
-}
-subtype_rules = {
-    'line': 1,
-    'match_pattern': '(?<=Your\s)(\w+)',
-    'match_group': -1,
-    'value_type': 'string',
-    'lower_case': True
-}
-title_rules = {
-    'line': 0,
-    'match_pattern': '(^.*)(?=\s\()',
-    'match_group': -1,
-    'value_type': 'string',
-}
-parsing_rules = {
-    'authors': author_rules,
-    'body': body_rules,
-    'created_at': created_at_rules,
-    'location_range': line_range_rules,
-    'page': page_rules,
-    'title': title_rules,
-    'subtype': subtype_rules,
-}
-delimiter = '=========='
-datestring_format = '%A, %B %d, %Y %I:%M:%S %p' 
+settings = configparser.ConfigParser()
+settings.read('settings.ini')
+
+parsing_rules = configparser.ConfigParser()
+parsing_rules.read('parsing_rules.ini')
 
 def is_end(line):
-
+    delimiter = parsing_rules['clipping']['delimiter']
     return line == delimiter
 
 def is_subtype(lines):
-    sl_ind = parsing_rules['subtype']['line']
+    sl_ind = int(parsing_rules['subtype']['line'])
     line = lines[sl_ind]
     line = line.lower()
 
     return line.find(subtype) > -1
 
 def datestring_to_unix(dstr):
+    datestring_format = parsing_rules['clipping']['datestring format']
     dt = datetime.strptime(dstr, datestring_format)
     timestamp = time.mktime(dt.timetuple())
 
@@ -86,13 +37,13 @@ def to_value_type(value_type, value):
 
 def parse_line(rules, line):
     data = None
-    pattern = rules['match_pattern']
-    value_type = rules['value_type']
+    pattern = rules['match pattern']
+    value_type = rules['value type']
 
     m = re.compile(pattern).findall(line)
 
     if m:
-        group = rules['match_group']
+        group = int(rules['match group'])
         data = m[group]
 
     if not data:
@@ -108,7 +59,7 @@ def parse_line(rules, line):
     return data
 
 def get_line(rules, lines):
-    line_ind = rules['line']
+    line_ind = int(rules['line'])
     line = ''
 
     if len(lines) > line_ind:
@@ -118,13 +69,17 @@ def get_line(rules, lines):
 
 def parse(lines):
     parsed = {}
+    fields = settings['output']['fields']
+    fields = fields.split(',')
+    fields = [s.strip(' ') for s in fields]
 
-    for rtype in parsing_rules:
-        rules = parsing_rules[rtype]
+    for field in fields:
+        rules = parsing_rules[field]
         line = get_line(rules, lines)
         val = parse_line(rules, line)
 
         if val:
-            parsed[rtype] = val
+            field_name = settings['field names'][field]
+            parsed[field_name] = val
 
     return parsed
