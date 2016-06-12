@@ -9,7 +9,11 @@ setup(
     author='Maximum Hallinan',
     description='A command-line tool for converting \'My Clippings.txt\' to JSON',
     platforms='any',
-    packages=find_packages(exclude=['tests']),
+    packages=[
+        'my_clippings_to_json.foo', 
+        'my_clippings_to_json.cli', 
+        'my_clippings_to_json.clipping'
+    ],
     install_requires=dependencies,
     entry_points={
         'console_scripts': [

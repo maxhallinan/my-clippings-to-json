@@ -13,16 +13,16 @@ pipsi install .
 ## Usage
 
 ```
-my_clippings_to_json [OPTIONS] INPUT OUTPUT
+my_clippings_to_json [OPTIONS] INPUT_PATH OUTPUT_PATH
 ```
 
 ### Arguments
 
-#### `INPUT`
+#### `INPUT_PATH`
 
 path to input file
 
-#### `OUTPUT`
+#### `OUTPUT_PATH`
 
 path to output file
 
@@ -35,3 +35,19 @@ show help page
 #### `-s, --start INTEGER`
 
 start at line number of input file (default: 1)
+
+## Output
+
+### Example
+
+```json
+[{
+  "body": "in certain contexts at least, the transparency of open code should be a requirement.",
+  "created_at": 1462434461,
+  "title": "Code version 2.0",
+  "subtype": "Highlight",
+  "page": 143,
+  "authors": ["Lessig, Lawrence"],
+  "location_range": [2618, 2619]
+}]
+```
