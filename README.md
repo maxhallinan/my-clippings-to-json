@@ -34,25 +34,27 @@ my_clippings_to_json [OPTIONS] INPUT_PATH OUTPUT_PATH
 
 #### `INPUT_PATH`
 
-path to input file
+Path to input file.
 
 #### `OUTPUT_PATH`
 
-path to output file
+Path to output file.
+
+File existing at `OUTPUT_PATH` will be overwritten.
 
 ### Options
 
 #### `-h, --help`
 
-show help page
+Show help page.
 
 #### `-s, --start INTEGER`
 
-start at line number of input file (default: 1)
+Start at line number of input file (default: 1).
 
 `INTEGER` should be the first line of the target clipping or the last line of the
-preceding clipping. if `INTEGER` falls in the middle of a clipping, that clipping 
+preceding clipping. If `INTEGER` falls in the middle of a clipping, that clipping 
 will be skipped. 
 
-`my_clippings_to_json` writes the last line number to `stdout`. start from this
-line number each next time.
+`my_clippings_to_json` writes the last line number to `stdout`. Next time, start at 
+this line number.

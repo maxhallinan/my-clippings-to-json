@@ -1,6 +1,7 @@
 from . import clipping
 from codecs import BOM_UTF8
 import json
+import os
 
 BOM_LEN = len(BOM_UTF8)
 
@@ -38,9 +39,15 @@ def main(input_path, output_path, start_line=0):
     lines = []
     line_count = start_line
 
+    try:
+        os.remove(output_path)
+    except OSError:
+            pass
+
     with \
         open(input_path, 'r', encoding='utf-8-sig') as input_file, \
         open(output_path, 'a') as output_file:
+
 
         is_first_write = True
 
