@@ -1,4 +1,6 @@
+from datetime import datetime
 import re
+import time
 
 author_rules = {
     'line': 0,
@@ -13,7 +15,7 @@ body_rules = {
     'match_group': -1,
     'value_type': 'string',
 }
-datetime_rules = {
+created_at_rules = {
     'line': 1,
     'match_pattern': '(?<=Added on )(.*)',
     'match_group': -1,
@@ -37,7 +39,7 @@ subtype_rules = {
     'match_pattern': '(?<=Your\s)(\w+)',
     'match_group': -1,
     'value_type': 'string',
-    'to_lower': True
+    'lower_case': True
 }
 title_rules = {
     'line': 0,
@@ -49,7 +51,7 @@ title_rules = {
 default_rules = {
     'authors': author_rules,
     'body': body_rules,
-    'created_on': datetime_rules,
+    'created_at': created_at_rules,
     'location_range': line_range_rules,
     'page': page_rules,
     'title': title_rules,
@@ -74,30 +76,40 @@ class Clipping(object):
         line = line.lower()
         return line.find(self.subtype) > -1
 
+    def datestring_to_unix(self, dstr):
+        frmt = '%A, %B %d, %Y %I:%M:%S %p'
+        dt = datetime.strptime(dstr, frmt)
+        timestamp = time.mktime(dt.timetuple())
+        return int(timestamp)
+
     def to_value_type(self, value_type, value):
         if value_type == 'date':
-            return value
+            value = self.datestring_to_unix(value)
         if value_type == 'number':
-            return int(value)
+            value = int(value)
 
         return value
 
-    def format_line(self, rules, line):
-        if rules.to_lower:
-            line = line.lower()
-        return line
-
     def parse_line(self, rules, line):
-        data = line
+        data = None
+        pattern = rules['match_pattern']
+        value_type = rules['value_type']
 
-        if 'match_pattern' in rules:
-            pattern = rules['match_pattern']
-            m = re.compile(pattern).findall(data)
-            if m:
-                group = rules['match_group']
-                data = m[group]
-            if 'delimiter' in rules:
-                data = data.split(rules['delimiter'])
+        m = re.compile(pattern).findall(line)
+
+        if m:
+            group = rules['match_group']
+            data = m[group]
+
+        if not data:
+            return None
+
+        if 'delimiter' in rules:
+            data = data.split(rules['delimiter'])
+            for i in range(len(data)):
+                data[i] = self.to_value_type(value_type, data[i])
+        else:
+            data = self.to_value_type(value_type, data)
 
         return data
 
