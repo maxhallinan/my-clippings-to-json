@@ -62,6 +62,7 @@ def main(input_path, output_path, start_line=0):
 
             lines.append(line)
 
-        output_file.write(']')
+        if not is_first_write:
+            output_file.write(']')
 
         return line_count

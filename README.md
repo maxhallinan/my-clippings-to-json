@@ -2,6 +2,20 @@
 
 Format 'Kindle/documents/My Clippings.txt' as JSON. 
 
+## Example
+
+```json
+[{
+  "body": "in certain contexts at least, the transparency of open code should be a requirement.",
+  "created_at": 1462434461,
+  "title": "Code version 2.0",
+  "subtype": "Highlight",
+  "page": 143,
+  "authors": ["Lessig, Lawrence"],
+  "location_range": [2618, 2619]
+}]
+```
+
 ## Installation
 
 First install [pipsi](https://github.com/mitsuhiko/pipsi#readme).
@@ -36,18 +50,9 @@ show help page
 
 start at line number of input file (default: 1)
 
-## Output
+`INTEGER` should be the first line of the target clipping or the last line of the
+preceding clipping. if `INTEGER` falls in the middle of a clipping, that clipping 
+will be skipped. 
 
-### Example
-
-```json
-[{
-  "body": "in certain contexts at least, the transparency of open code should be a requirement.",
-  "created_at": 1462434461,
-  "title": "Code version 2.0",
-  "subtype": "Highlight",
-  "page": 143,
-  "authors": ["Lessig, Lawrence"],
-  "location_range": [2618, 2619]
-}]
-```
+`my_clippings_to_json` writes the last line number to `stdout`. start from this
+line number each next time.
