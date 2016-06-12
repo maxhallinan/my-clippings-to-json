@@ -13,16 +13,16 @@ pipsi install .
 ## Usage
 
 ```
-my_clippings_to_json [OPTIONS] INPUT OUTPUT
+my_clippings_to_json [OPTIONS] INPUT_PATH OUTPUT_PATH
 ```
 
 ### Arguments
 
-#### `INPUT`
+#### `INPUT_PATH`
 
 path to input file
 
-#### `OUTPUT`
+#### `OUTPUT_PATH`
 
 path to output file
 
