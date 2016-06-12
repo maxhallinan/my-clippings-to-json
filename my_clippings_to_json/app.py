@@ -1,17 +1,8 @@
-from clipping import Clipping
+import clipping
 from codecs import BOM_UTF8
 import json
 
 BOM_LEN = len(BOM_UTF8)
-
-highlight_options = { 'subtype': 'highlight' }
-highlight = Clipping(highlight_options)
-
-bookmark_options = { 'subtype': 'bookmark' }
-bookmark = Clipping(bookmark_options)
-
-note_options = { 'subtype': 'note' }
-note = Clipping(note_options)
 
 def remove_bom(s):
     s = str.encode(s)
@@ -27,16 +18,11 @@ def clean_line(line):
 
     return line
 
-def parse_clipping(clipping):
-    clipping = list(filter(None, clipping))
-    parsed = {}
+def parse_clipping(lines):
+    lines = list(filter(None, lines))
+    parsed = None
 
-    if highlight.is_subtype(clipping):
-        parsed = highlight.parse(clipping)
-    elif note.is_subtype(clipping):
-        parsed = note.parse(clipping)
-    elif bookmark.is_subtype(clipping):
-        parsed = bookmark.parse(clipping)
+    parsed = clipping.parse(lines)
 
     return parsed
 
@@ -49,7 +35,7 @@ def append_to(output_file, json_str, is_first):
     return None
 
 def main(input_path, output_path, start_line=0):
-    clipping = []
+    lines = []
     line_count = start_line
 
     with \
@@ -58,22 +44,23 @@ def main(input_path, output_path, start_line=0):
 
         is_first_write = True
 
-        for i in range(start_line):
+        for i in range(start_line - 1):
             input_file.readline()
 
         for line in input_file:
             line_count += 1
             line = clean_line(line)
 
-            if Clipping.is_end(line):
-                parsed = parse_clipping(clipping)
-                json_str = json.dumps(parsed)
-                append_to(output_file, json_str, is_first_write)
-                is_first_write = False
-                clipping = []
+            if clipping.is_end(line):
+                parsed = parse_clipping(lines)
+                if parsed:
+                    json_str = json.dumps(parsed)
+                    append_to(output_file, json_str, is_first_write)
+                    is_first_write = False
+                lines = []
                 continue
 
-            clipping.append(line)
+            lines.append(line)
 
         output_file.write(']')
 
