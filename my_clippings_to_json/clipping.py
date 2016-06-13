@@ -1,13 +1,18 @@
 import configparser
 from datetime import datetime
+import os
 import re
 import time
 
+file_path = os.path.abspath(os.path.dirname(__file__))
+
 settings = configparser.ConfigParser()
-settings.read('settings.ini')
+settings_path = os.path.join(file_path, 'settings.ini')
+settings.read(settings_path)
 
 parsing_rules = configparser.ConfigParser()
-parsing_rules.read('parsing_rules.ini')
+parsing_rules_path = os.path.join(file_path, 'parsing_rules.ini')
+parsing_rules.read(parsing_rules_path)
 
 def is_end(line):
     delimiter = parsing_rules['clipping']['delimiter']
