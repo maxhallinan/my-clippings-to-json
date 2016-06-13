@@ -1,4 +1,4 @@
-from . import app
+from . import io
 import click
 import sys
 
@@ -19,7 +19,7 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
     type=int,
     help='start at line number of input file')
 def main(input_path, output_path, start):
-    last_line_number = app.main(
+    last_line_number = io.main(
         input_path, 
         output_path, 
         start_line=start)
