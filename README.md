@@ -27,7 +27,7 @@ pipsi install .
 ## Usage
 
 ```
-my_clippings_to_json [OPTIONS] INPUT_PATH OUTPUT_PATH
+my-clippings-to-json [OPTIONS] INPUT_PATH OUTPUT_PATH
 ```
 
 ### Arguments
@@ -56,5 +56,5 @@ Start at line number of input file (default: 1).
 preceding clipping. If `INTEGER` falls in the middle of a clipping, that clipping 
 will be skipped. 
 
-`my_clippings_to_json` writes the last line number to `stdout`. Next time, start at 
+`my-clippings-to-json` writes the last line number to `stdout`. Next time, start at 
 this line number.
