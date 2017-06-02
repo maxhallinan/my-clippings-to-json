@@ -16,7 +16,7 @@ setup(
     description='Format \'Kindle/documents/My Clippings.txt\' as JSON',
     entry_points={
         'console_scripts': [
-            'my_clippings_to_json = my_clippings_to_json.cli:main',
+            'my-clippings-to-json = my_clippings_to_json.cli:main',
         ],
     },
     include_package_data=True,
